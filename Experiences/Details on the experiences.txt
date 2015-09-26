@@ -1,0 +1,172 @@
+
+----------    Details on the scenarios :    ----------
+------------------------------------------------------
+
+
+-----------------------------
+Scenario 1 to 3 :
+-----------------------------
+
+The noiseless image is divided into two horizontal strips. The upper side of the image is balck, and the lower side is white.
+Whe use the followin parameters :
+Size of image :                                J = 7
+Size of the image (after sampling)           J_c = 7 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0.5, 1, and 2 (for scenarios 1,2 and 3)
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 3
+Upper end position of an edgelet            ymin = 10
+Bottom end position of an edgelet           ymax = n-10
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 4
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = line
+
+
+-----------------------------
+Scenario 4 to 6 :
+-----------------------------
+
+The noiseless image is divided into two strips by the curve. The upper side of the image is balck, and the lower side is white.
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 8 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0.5, 1, and 2 (for scenarios 1,2 and 3)
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 3
+Upper end position of an edgelet            ymin = 10
+Bottom end position of an edgelet           ymax = n-10
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 4
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = line
+
+
+-----------------------------
+Scenario 7 :
+-----------------------------
+
+The noiseless image is divided into two strips by the curve that has a slope > 1. The upper side of the image is balck, and the lower side is white.
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 8 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 3
+Upper end position of an edgelet            ymin = 10
+Bottom end position of an edgelet           ymax = n-10
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 6
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = sin_am
+
+
+-----------------------------
+Scenario 8 :
+-----------------------------
+
+We use compute the algorithm on the image "Road2.bmp". The algorithm is supposed to detect and approximate a road that goes from the left end to the right end of the image.
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 8 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 3
+Upper end position of an edgelet            ymin = 20
+Bottom end position of an edgelet           ymax = n-20
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 6
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = "Road2.bmp" 
+
+
+-----------------------------
+Scenario 9 :
+-----------------------------
+
+We use compute the algorithm on the image "Wire2.png". The algorithm is supposed to detect and approximate a road that goes from the left end to the right end of the image.
+Whe use the followin parameters :
+Size of image :                                J = 9
+Size of the image (after sampling)           J_c = 9 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 1
+Upper end position of an edgelet            ymin = 20
+Bottom end position of an edgelet           ymax = n-20
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 6
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = line
+
+
+-----------------------------
+Scenario 10 :
+-----------------------------
+
+We use compute the algorithm on the image "golden-gate-cut.jpg". The algorithm is supposed to detect and approximate a road that goes from the left end to the right end of the image.
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 8 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 2
+Upper end position of an edgelet            ymin = 20
+Bottom end position of an edgelet           ymax = n-20
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 6
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = "golden-gate-cut.jpg"
+
+
+-----------------------------
+Scenario 11 :
+-----------------------------
+
+We use compute the algorithm on the image "golden-gate-cut-fog.jpg". The algorithm is supposed to detect and approximate a road that goes from the left end to the right end of the image.
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 8 (we took all the columns of the image)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 2
+Upper end position of an edgelet            ymin = 20
+Bottom end position of an edgelet           ymax = n-20
+Coarsest scale :                             csc = 0
+Finiest scale :                              fsc = 6
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = "golden-gate-cut-fog.jpg"
+
+
+
+-----------------------------
+Scenario 12 to 14 :
+-----------------------------
+
+The noiseless image is divided into two strips by the curve. The upper side of the image is balck, and the lower side is white. We sample the image
+Whe use the followin parameters :
+Size of image :                                J = 8
+Size of the image (after sampling)           J_c = 6 (we take 1/4 of the columns)
+Mean of the noise :                            M = 0
+Variance of the noise :                        V = 0.5, 1, and 2 (for scenarios 1,2 and 3)
+Vertical distance between two vertices : delta_p = 1
+Maximum slope of an edgelet :        slope_range = 1
+Size of the filter :                           w = 5
+Upper end position of an edgelet            ymin = 10
+Bottom end position of an edgelet           ymax = n-10
+Coarsest scale :                             csc = 2
+Finiest scale :                              fsc = 8
+Max length of a path :                 maxLength = 7
+Type of image :                       type_image = line

@@ -1,0 +1,31 @@
+------    EdgeletLab_3CS    ------
+---------------------------------
+
+
+---------------------------------
+Description :
+---------------------------------
+
+This set of Matlab and C language files detects and approximates a horizon curve in the image using multiscale edgelets (curve that goes from the left 
+to the right side of the image).
+
+It works as following :
+- get the parameters
+- build or load an image
+- sample the columns of the image (if we do not want to compute all the pixels of the image)
+- compute the edgelet transform (response of all the edgelets in the edgelet dictionnary
+- solve the best path problem : find the path of edgelets (of sizes l = 1, ..., MaxLength) with the highest 
+  responses that go from the left to the right side of the image. This part is computed in C language if mex is compiled successfuly
+- plot the different paths on the image.
+
+
+---------------------------------
+How to run EdgeletLab_3C :
+---------------------------------
+
+- Run EdgeletPath.m. This file will create the Matlab path, and will try to compile the mex function in C language by running 
+  CompileMex.m. If the C language function is not compiled succesfully, the computation will be done entirely in Matlab 
+  (see the Matlab console to see whether or not it is compiled succesfully).
+
+- Run Main_EdgeletLab.m. You can either run an existing scenario, invent a scenario giving manually the input parameters,
+  or run the default scenario (see section "initialization of the parameters" in Main_EdgeletLab.m).
