@@ -1,0 +1,27 @@
+0.000000
+12.444794
+24.024727
+35.946957
+50.596058
+
+
+
+ PARAMETERS : 
+
+image type : noise_only
+image size J: 9
+image size computed J_c: 7
+number of edgelets in the path: 8
+number of iterations nb_it: 3
+filter window size w : 3
+Variance vector : 
+0.000000
+
+0.500000
+
+1.000000
+
+1.500000
+
+2.000000
+

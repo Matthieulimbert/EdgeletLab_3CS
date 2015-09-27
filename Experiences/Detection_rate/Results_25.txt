@@ -1,0 +1,16 @@
+image type : sin
+image size : 9
+image size computed : 7
+number of iterations : 2
+
+Variance vector : 
+0.000000
+
+1.000000
+
+2.000000
+
+detection rates : 
+1.000000
+0.500000
+0.000000

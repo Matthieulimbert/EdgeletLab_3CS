@@ -1,6 +1,8 @@
 %
-% Experiment_detection_rate.m
-% You must run EdgeletPath.m before.
+% Getting_threshold.m
+% 
+% This Matlab scripts gets the detection threshold to use in the Matlab file "Experiment_detection_rate.m".
+% You must run EdgeletPath.m before running this file.
 %
 %
 % Steps:
@@ -76,10 +78,7 @@ disp('--Experiment_detection_rate.m--');
 
 
     % Type of image :
-%     type_image = 'line';
-    type_image = 'sin';
-%     type_image = 'noise_only';
-%     type_image = 'sin_am';
+    type_image = 'noise_only';
 
 
     % Maximum size of the path :
@@ -93,34 +92,6 @@ disp('--Experiment_detection_rate.m--');
 
 
 
-    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% GENERATE THE NOISELESS IMAGE
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-disp('Generating an image...');
-V = 0;
-[I, I_b] = MakeImage(n, M, V, type_image);% I is the noiseless image, I_b is the noisy image
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% LOCALIZING THE HORIZON FUNCTION FOR COMPARISON
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% We perform a Canny filter on the noiseless image to get a matrix showing where the horizon function really is:
-
-thresh            = [0.2 , 0.4];                % Canny filter threshold
-I_comparison      = edge(I,'canny',thresh);   % We perform the Canny filter
-I_comparison(:,1) = 1;
-I_comparison(:,n) = 1;
-
-
-% figure;
-% imshow(I_comparison);
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,53 +101,26 @@ I_comparison(:,n) = 1;
 pas = 1;
 V_min = 0;
 V_max = 2;
-detection_rate = zeros( 1, 1 + (V_max - V_min) / pas );
+threshold = zeros( 1, 1 + (V_max - V_min) / pas );
 
-indice = 1; % initialization of the indice
+indice_V = 1; % initialization of the indice on the variance
 
 
 for V = V_min:pas:V_max
     
 fprintf( 'Starting on the loop for V = %d \n', V);
-detection = 0; % initialization of the counter "detection"
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Getting the threshold
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% We get the threshold from a .txt file
-
-
-% Path of the file containting the thresholds :
-pourcentage = 2^J_c / 2^J * 100; % pourcentage of the image computed
-dest = 'Experiences\Detection_rate\';
-addpath(dest) 
-
-% Name of the file containting the thresholds :
-name = 'Thresholds_';
-name = strcat(name,num2str(pourcentage));
-name = strcat(name,'.txt');
-
-% We open the file containing the thresholds:
-fileID = fopen( strcat(dest,name) , 'r' );
-formatSpec = '%f';
-
-% We extract the thresholds from the file:
-thres = fscanf(fileID,formatSpec);
-
-t_s = thres(indice);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% STARTING OF THE LOOP ON THE ITERATIONS
+%% STARTING OF THE LOOP ON THE iterations
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-nb_it = 2;
+nb_it = 3;
+cost_vector = zeros ( 1, nb_it ); % initialization of the counter "cost"
 
 for it = 1:nb_it
 
-fprintf( '\nIteration %d / %d for V = %d \n', it, nb_it, V);
+fprintf( 'Iteration %d / %d for V = %d \n', it, nb_it, V);
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GENERATE THE NOISY IMAGE
@@ -199,11 +143,6 @@ I_b_temp (I_b_temp < 0) = 0;
 
 I_temp = 1 - I; % In Matlab, if pixel=0, then it's black...
 I_b_temp = 1 - I_b_temp;
- 
-% % Plot the noiseless image:
-% figure(1)
-% imshow(I_temp);
-
 
 
 
@@ -225,12 +164,15 @@ sample = sampling( graphparam );
 
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% GET EDGELET TRANSFORM
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 disp('Taking edgelet transform...');
 cc = EdgeletTransform(I_b(:,sample), graphparam); 
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -248,89 +190,38 @@ disp('Running optimization routine for graph...');
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% REJECTION OF THE PATHS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% We reject the paths with responses lower than the threshold :
-no_path (costpath < t_s) = 1;
-
-if no_path(number_edgelets_path) == 0
-
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PLOT THE BEST PATHS
+%% WE UPDATE THE VECTOR CONTAINING THE COSTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-% disp('We display the images with the paths of each length...')
-
-npaths = length(bestpaths);
-% binary_image = cell(1,npaths);
-
-% for k=1:npaths,
-%   if no_path(k) == 0 % If a path exists for this length, we plot it...
-%        h = figure(k + 2);
-% 
-%       % subplot(npaths,1,k);
-%       imshow(I_b_temp);
-%       hold on;
-%     
-%       binary_image{k} = DisplayEdgeletPath_onBinaryImage(bestpaths{k},graphparam, sample);
-%       figure();
-%       imshow(binary_image{k});
-%       
-%       DisplayEdgeletPath(bestpaths{k},graphparam, sample); % plot the best path
-% 
-%       title(strcat('Best path restricted to #edgelets=',num2str(k),...
-%                        ', |cost|=',num2str(abs(costpath(k)))));
-%                    
-%         
-% 
-%       
-%   else
-%       fprintf( 'Warning : There is no path of length l = %d \n', k);
-%   end
-%   
-% end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% GETTING THE EDGE YIELDED BY OUR ALGORITHM
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-k = number_edgelets_path;
-binary_image = DisplayEdgeletPath_onBinaryImage(bestpaths{k},graphparam, sample);
+cost_vector(it) = costpath(number_edgelets_path);
 
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% WE CHECK IF THE EDGELET PATH DOES CORRESPOND TO THE HORIZON FUNCTION
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-% We compare the maximum vertical distance between the edges on the two
-% images (image resulting from our algorithm, and the comparison image):
-dist = similarity( binary_image, I_comparison );
-
-dist_max = 10;
-if dist < dist_max
-    detection = detection + 1; % the edge is detected
-end
-
-end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% END OF THE LOOP ON THE ITERATIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 
 end
 
-% calculation of the detection rate for a certain variance :
-detection_rate(indice) = detection / nb_it;
-indice = indice + 1;
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CALCULATION OF THE THRESHOLD FOR A CERTAIN VARIANCE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+rejection_pourcentage = 0.95; % pourcentage of rejection in case there is no path...
+indice_threshold      = round(rejection_pourcentage * nb_it);
+cost_vector = sort(cost_vector);
+threshold(indice_V) = cost_vector(indice_threshold);
+indice_V = indice_V + 1;
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% END OF THE LOOP ON THE VARIANCE
@@ -339,19 +230,31 @@ indice = indice + 1;
 
 end
 
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% We save the result of the experience
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+pourcentage = 2^J_c / 2^J * 100; % pourcentage of the image computed
+dest = 'Experiences\Detection_rate\';
+addpath(dest) %% So that we only add to the path the folder containing the scenario we want to run
 
-
-% Name of the file containting the results :
-name = 'Results_';
+name = 'Thresholds_';
 name = strcat(name,num2str(pourcentage));
 name = strcat(name,'.txt');
 
+fileID = fopen(strcat(dest,name),'w');
+
+% We write the thresholds that we computed :
+fprintf(fileID,'thresholds corresponding to the different values of the variance (see below) : \n');
+for i = 1 : length(threshold)
+fprintf(fileID,'%f\n\n', V_min:pas:V_max);
+end
 
 % We write the parameters
+fprintf(fileID,'\n\n PARAMETERS : \n\');
 fprintf(fileID,'image type : ');
 fprintf(fileID,'%s\n', type_image);
 fprintf(fileID,'image size : J');
@@ -359,18 +262,13 @@ fprintf(fileID,'%d\n', J);
 fprintf(fileID,'image size computed J_c: ');
 fprintf(fileID,'%d\n', J_c);
 fprintf(fileID,'number of edgelets in the path: ');
-fprintf(fileID,'%d\n', number_edgelets_path);
+fprintf(fileID,'%d\n\n', number_edgelets_path);
 fprintf(fileID,'number of iterations nb_it: ');
-fprintf(fileID,'%d\n', nb_it);
+fprintf(fileID,'%d\n\n', nb_it);
 fprintf(fileID,'filter window size w : ');
 fprintf(fileID,'%d\n', w);
 fprintf(fileID,'Variance vector : \n');
 fprintf(fileID,'%f\n\n', V_min:pas:V_max);
-
-
-% We write the detections rates (results of the experiment) that we computed :
-fprintf(fileID,'detection rates : \n');
-fprintf(fileID,'%f\n', detection_rate);
 fclose(fileID);
 
 

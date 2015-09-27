@@ -149,24 +149,29 @@ detection = 0; % initialization of the counter "detection"
 % We get the threshold from a .txt file
 
 
-% Path of the file containting the thresholds :
+% Path of the file containting the results :
 pourcentage = 2^J_c / 2^J * 100; % pourcentage of the image computed
 dest = 'Experiences\Detection_rate\';
 addpath(dest) 
 
-% Name of the file containting the thresholds :
-name = 'Thresholds_';
+% Name of the file containting the results :
+name = 'Results_';
 name = strcat(name,num2str(pourcentage));
 name = strcat(name,'.txt');
 
-% We open the file containing the thresholds:
-fileID = fopen( strcat(dest,name) , 'r' );
+%% So that we only add to the path the folder containing the scenario we want to run
+% We open the file containing the parameters:
+dest = 'Experiences\Scenario_';
+dest = strcat(dest,num2str(num_scenario));
+dest = strcat(dest,'\');
+addpath(dest) %% So that we only add to the path the folder containing the scenario we want to run
+fileID = fopen( strcat(dest,'Parameters.txt') , 'r' );
 formatSpec = '%f';
 
-% We extract the thresholds from the file:
-thres = fscanf(fileID,formatSpec);
+% We extract the parameters from the file (see below for the details on the parameters):
+param = fscanf(fileID,formatSpec);
 
-t_s = thres(indice);
+J = param(1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% STARTING OF THE LOOP ON THE ITERATIONS
@@ -252,6 +257,8 @@ disp('Running optimization routine for graph...');
 %% REJECTION OF THE PATHS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+t_s = 0;
+
 % We reject the paths with responses lower than the threshold :
 no_path (costpath < t_s) = 1;
 
@@ -316,7 +323,7 @@ binary_image = DisplayEdgeletPath_onBinaryImage(bestpaths{k},graphparam, sample)
 % images (image resulting from our algorithm, and the comparison image):
 dist = similarity( binary_image, I_comparison );
 
-dist_max = 10;
+dist_max = 4;
 if dist < dist_max
     detection = detection + 1; % the edge is detected
 end
